@@ -1,0 +1,60 @@
+.page { 
+    display: flex;
+}
+
+.side-menu {
+    width: 15%;
+}
+
+.side-content {
+    flex-grow: 1;
+    width: 85%;
+}
+
+.box {
+    padding: 30px;
+}
+
+.content {
+    background-color: #DDE8FF;
+    height: 94vh;
+    border-radius: 50px;
+    text-align: -webkit-center;
+}
+
+.header {
+    border-bottom: 1px solid #c0d2f9;
+    text-align: -webkit-right;
+    height: 10vh;
+    width: 90%;
+}
+
+.profile {
+    width: 25%;
+    height: 10vh;
+    text-align: -webkit-left;
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    height: 7vh;
+}
+
+.info {
+    display: unset;
+}
+
+.text {
+    font-size: 15px;
+    display: block; 
+    width: 100%;
+    text-indent: 10px;
+    color: darkslategray
+}
+
+.text-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+}

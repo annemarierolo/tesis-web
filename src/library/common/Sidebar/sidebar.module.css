@@ -1,0 +1,121 @@
+/* Header Styles */
+.brand {
+    height: 15vh;
+    width: 100%;
+    text-align: -webkit-center;
+}
+
+.brand .content {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+    height: 15vh;
+    padding: 10px;
+}
+
+.brand .icon{
+    width: 35%;
+}
+
+.brand .text{
+    text-indent: 0;
+    font-size: 135%;
+    font-variant: all-small-caps;
+    color: darkslategrey;
+}
+
+.brand .item:hover {
+    background: none;
+}
+
+.brand .item:hover .icon {
+    display: block
+}
+
+.brand .item:hover .text {
+    color: darkslategrey;
+}
+
+/* Middle Styles */
+
+.side {
+    height: 75vh;
+    width: 100%;
+    text-align: -webkit-center;
+}
+
+/* Footer Styles */
+
+.footer {
+    height: 10vh;
+    width: 100%;
+    text-align: -webkit-center;
+}
+
+/* Items Styles */
+
+.content {
+    width: 75%;
+}
+
+.item {
+    padding: 10px;
+    text-indent: 20px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.item-active {
+    padding: 10px;
+    text-indent: 20px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    background-color: #c0d2f9;
+}
+
+.item-active .text {
+    color: white;
+}
+
+.item-active .icon {
+    display: none
+}
+
+.item-active .icon-hover {
+    display: block
+}
+
+.item:hover{
+    background-color: #c0d2f9
+}
+
+.item:hover .text {
+    color: white;
+}
+
+.item:hover .icon {
+    display: none
+}
+
+.item:hover .icon-hover {
+    display: block
+}
+
+.icon {
+    width: 15%;
+}
+
+.icon-hover {
+    width: 15%;
+    display: none;
+}
+
+.text {
+    font-size: 115%;
+    font-variant: all-small-caps;
+    color: darkslategrey;
+}

@@ -1,0 +1,12 @@
+.page { 
+    display: flex;
+}
+
+.side-image {
+    width: 65%;
+}
+
+.side-form {
+    flex-grow: 1;
+    width: 35%;
+}

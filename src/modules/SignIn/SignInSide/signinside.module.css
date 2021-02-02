@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap');
+
+.image-card {
+    background-color: #ffff;
+    padding: 15%;
+}
+
+.container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    width: 90%;
+}
+
+.title {
+    font-family: 'Dosis', sans-serif;
+}
+
+.descrip {
+    font-family: 'Dancing Script', sans-serif !important;
+}
+
+.image {
+    height: 50vh;
+    width: 100%;
+}
