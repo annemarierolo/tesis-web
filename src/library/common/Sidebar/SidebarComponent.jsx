@@ -15,8 +15,9 @@ const SidebarComponent = (props) => {
             <div className={`${styles.brand}`}>
                 <div className={styles.content}>
                     <div className={styles.item}>
-                        <img alt='' className={styles.icon} src={brand}/>
-                        <label className={styles.text}>Farmacia Luz Eléctrica</label>
+                        {<img alt='' className={styles.icon} src={brand}/>}
+                        {/* <label className={styles.text}>Farmacia Luz Eléctrica</label> */}
+                        {/* <label className={styles.text}>Luz Eléctrica</label> */}
                     </div>
                 </div>
             </div>

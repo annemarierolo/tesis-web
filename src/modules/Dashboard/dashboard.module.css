@@ -3,34 +3,48 @@
 }
 
 .side-menu {
-    width: 15%;
+    width: 30vh;
+    border-right: 0.5px solid lightgray;
 }
 
 .side-content {
     flex-grow: 1;
-    width: 85%;
+    width: 70vh;
 }
 
-.box {
-    padding: 30px;
+@media (max-width: 1400px), (max-height: 700px){
+    .side-menu {
+        width: 10vh;
+        min-width: 10vh;
+        border-right: 0.5px solid lightgray;
+    }
+    
+    .side-content {
+        flex-grow: 1;
+        width: 90vh;
+    }
 }
+
+/* .box {
+    padding: 30px;
+} */
 
 .content {
-    background-color: #DDE8FF;
+    /* background-color: #DDE8FF; */
     height: 94vh;
-    border-radius: 50px;
+    /* border-radius: 50px; */
     text-align: -webkit-center;
 }
 
 .header {
-    border-bottom: 1px solid #c0d2f9;
+    border-bottom: 1px solid lightgray;
     text-align: -webkit-right;
     height: 10vh;
     width: 90%;
 }
 
 .profile {
-    width: 25%;
+    width: 30vh;
     height: 10vh;
     text-align: -webkit-left;
     display: flex;
@@ -38,7 +52,7 @@
 }
 
 .icon {
-    height: 7vh;
+    height: 5vh;
 }
 
 .info {
@@ -46,7 +60,7 @@
 }
 
 .text {
-    font-size: 15px;
+    font-size: 10px;
     display: block; 
     width: 100%;
     text-indent: 10px;
@@ -54,7 +68,7 @@
 }
 
 .text-name {
-    font-size: 18px;
+    font-size: 12px;
     font-weight: bold;
     color: black;
 }
