@@ -40,6 +40,15 @@ class UserComponent extends React.Component {
     await console.log(this.state.roles.length > 0);
   }
 
+  addUser = async () => {
+    let user = await UserService.addUser(this.state.user)
+    if (user) {
+      await this.fetchUsers()
+      await this.showForm('Agregar')
+    };
+    
+  }
+
   updateUser = async () => {
     let user = await UserService.updateUser(this.state.user)
     if (user) {
@@ -123,6 +132,15 @@ class UserComponent extends React.Component {
     })
   }
 
+  handleRol = (rol) => {
+    this.setState((prevState) => {
+        let user = Object.assign({}, prevState.user);
+        user.role_id = rol;
+        console.log(user)
+        return { user };
+    })
+  }
+
   render = () => {
     return (
         <div>
@@ -143,6 +161,8 @@ class UserComponent extends React.Component {
                 handleEmail={this.handleEmail}
                 handlePassword={this.handlePassword}
                 handlePhoneNumber={this.handlePhoneNumber}
+                handleRol={this.handleRol}
+                addUser={this.addUser}
                 updateUser={this.updateUser}
                 /> }
             </div>
