@@ -1,0 +1,10 @@
+.page { 
+    height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.image {
+    height: 50vh;
+    width: 100%;
+}
