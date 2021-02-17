@@ -33,8 +33,9 @@ const UserFormComponent = (props) => {
                     <InputLabel htmlFor="outlined-age-native-simple">Rol</InputLabel>
                     <Select
                         native
-                        value={props.user.rol_id}
+                        value={props.user.role_id}
                         label="Rol"
+                        onChange={(event) => props.handleRol(event.target.value)}
                         inputProps={{
                             name: 'rol',
                             id: 'outlined-age-native-simple',
@@ -48,7 +49,7 @@ const UserFormComponent = (props) => {
                 </FormControl>
             </div>
             <Button variant="contained" color='secondary' className={styles.button} onClick={props.hideForm}>Cancelar</Button>
-            <Button variant="contained" color='primary' className={styles.button} onClick={() => props.label === 'Agregar' ? props.addUser : props.updateUser(props.user)}>{ props.label }</Button>
+            <Button variant="contained" color='primary' className={styles.button} onClick={() => props.label === 'Agregar' ? props.addUser(props.user) : props.updateUser(props.user)}>{ props.label }</Button>
         </div>
     );
 
