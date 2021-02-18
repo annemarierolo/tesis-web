@@ -33,14 +33,24 @@ const tableIcons = {
   };
 
 const TableResponsiveComponent = (props) => {
-    console.log(props);
-    
     return (
       <MaterialTable
         title={props.title}
         icons={tableIcons}
         columns={props.headers}
-        data={props.data}        
+        data={props.data} 
+        actions={[
+          {
+            icon: Edit,
+            tooltip: 'Editar',
+            onClick: (event, rowData) =>  props.showForm('Editar', rowData)
+          },
+          {
+            icon: Remove,
+            tooltip: 'Eliminar',
+            onClick: (event, rowData) => alert("You want to delete " + rowData.firstName)
+          }
+        ]}       
         options={{
           sorting: true
         }}

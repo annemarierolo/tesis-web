@@ -2,25 +2,27 @@
     display: flex;
 }
 
-.side-menu {
+/* .side-menu {
     width: 30vh;
     border-right: 0.5px solid lightgray;
-}
+} */
 
 .side-content {
     flex-grow: 1;
+    margin-left: 30vh;
     width: 70vh;
 }
 
 @media (max-width: 1400px), (max-height: 700px){
-    .side-menu {
+    /* .side-menu {
         width: 10vh;
         min-width: 10vh;
         border-right: 0.5px solid lightgray;
-    }
+    } */
     
     .side-content {
         flex-grow: 1;
+        margin-left: 10vh;
         width: 90vh;
     }
 }
