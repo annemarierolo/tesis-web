@@ -17,6 +17,20 @@ const ExchangeService = {
                     reject(error)
                 });
         })
+    },
+
+    async getDolars() {
+        return new Promise(async(resolve, reject) => {
+            const url = 'https://s3.amazonaws.com/dolartoday/data.json'
+            await axios.get(url)
+                .then((res) => {
+                    resolve(res['data']['USD']);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    reject(error);
+                })
+        })
     }
 }
 
