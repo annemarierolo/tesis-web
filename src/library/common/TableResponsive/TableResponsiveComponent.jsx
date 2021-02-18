@@ -39,18 +39,7 @@ const TableResponsiveComponent = (props) => {
         icons={tableIcons}
         columns={props.headers}
         data={props.data} 
-        actions={[
-          {
-            icon: Edit,
-            tooltip: 'Editar',
-            onClick: (event, rowData) =>  props.showForm('Editar', rowData)
-          },
-          {
-            icon: Remove,
-            tooltip: 'Eliminar',
-            onClick: (event, rowData) => alert("You want to delete " + rowData.firstName)
-          }
-        ]}       
+        actions={props.actions}     
         options={{
           sorting: true
         }}
