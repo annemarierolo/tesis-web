@@ -1,10 +1,10 @@
 import axios from 'axios'
 
-const UserService = {
+const ExchangeService = {
 
     async fetchData() {
         return new Promise(async(resolve, reject) => {
-            const url = 'http://localhost:5000/api/v1/users'
+            const url = 'http://localhost:5000/api/v1/exchanges'
             const headers = {
                 'x-access-token': localStorage.getItem('token')
             }
@@ -19,15 +19,27 @@ const UserService = {
         })
     },
 
-    async addUser(user) {
-        delete user['tableData']
-        delete user['rol']
+    async getDolars() {
         return new Promise(async(resolve, reject) => {
-            const url = 'http://localhost:5000/api/v1/users'
+            const url = 'https://s3.amazonaws.com/dolartoday/data.json'
+            await axios.get(url)
+                .then((res) => {
+                    resolve(res['data']['USD']);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    reject(error);
+                })
+        })
+    },
+
+    async addExchange(dolar) {
+        return new Promise(async(resolve, reject) => {
+            const url = 'http://localhost:5000/api/v1/exchanges'
             const headers = {
                 'x-access-token': localStorage.getItem('token')
             }
-            await axios.post(url, user, { headers: headers })
+            await axios.post(url, dolar, { headers: headers })
                 .then((res) => {
                     resolve(res.data)
                 })
@@ -38,30 +50,14 @@ const UserService = {
         })
     },
 
-    async updateUser(user) {
-        delete user['tableData']
+    async updateExchange(exchange) {
+        delete exchange['tableData']
         return new Promise(async(resolve, reject) => {
-            const url = 'http://localhost:5000/api/v1/users/' + user.id
+            const url = 'http://localhost:5000/api/v1/exchanges/' + exchange.id
             const headers = {
                 'x-access-token': localStorage.getItem('token')
             }
-            await axios.put(url, user, { headers: headers })
-                .then((res) => {
-                    resolve(res.data)
-                })
-                .catch((error) => {
-                    console.log("Errorrr", error);
-                    reject(error)
-                });
-        })
-    },
-    async deleteUser(user) {
-        return new Promise(async(resolve, reject) => {
-            const url = 'http://localhost:5000/api/v1/users/' + user.id
-            const headers = {
-                'x-access-token': localStorage.getItem('token')
-            }
-            await axios.delete(url, { headers: headers })
+            await axios.put(url, exchange, { headers: headers })
                 .then((res) => {
                     resolve(res.data)
                 })
@@ -73,4 +69,4 @@ const UserService = {
     }
 }
 
-export default UserService;
+export default ExchangeService;

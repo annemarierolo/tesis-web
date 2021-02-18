@@ -5,7 +5,9 @@ import UserFormComponent from './UserForm/UserFormComponent';
 import UserService from '../../main/services/User/UserService'
 import TableResponsiveComponent from '../../library/common/TableResponsive/TableResponsiveComponent';
 import RolesService from '../../main/services/Roles/RolesService';
-
+import Alerts from '../../library/common/Alerts/Alert';
+import Delete from '@material-ui/icons/Delete';
+import Edit from '@material-ui/icons/Edit';
 
 class UserComponent extends React.Component {
 
@@ -17,6 +19,18 @@ class UserComponent extends React.Component {
         {title: "Apellido", field: "lastName"},
         {title: "Email", field: "email"}
       ],
+      actions: [
+        {
+          icon: Edit,
+          tooltip: 'Editar',
+          onClick: (event, rowData) =>  this.showForm('Editar', rowData)
+        },
+        { 
+          icon: Delete,
+          tooltip: 'Eliminar',
+          onClick: (event, rowData) => this.deleteUser(rowData)
+        }
+      ], 
       roles: [],
       users: [],
       user: null,
@@ -57,6 +71,8 @@ class UserComponent extends React.Component {
     };
     
   }
+
+  deleteUser = async (user) => Alerts.desitionAlert('Desea eliminarlo', user, UserService.deleteUser, this.fetchUsers);
 
   showForm = (label, newUser=null) => {
     console.log(label);
@@ -147,7 +163,7 @@ class UserComponent extends React.Component {
             {/* <h1>Users Component!</h1> */}
             <div className={styles.table}>
               { !this.state.form ? 
-              <TableResponsiveComponent title='Usuarios' headers={this.state.headers} actions={this.state.actions} data={this.state.users} fetchData={this.fetchData} showForm={this.showForm}/> 
+              <TableResponsiveComponent title='Usuarios' headers={this.state.headers} actions={this.state.actions} data={this.state.users} showForm={this.showForm} deleteItem={this.deleteUser}/> 
               : <UserFormComponent 
                 label={this.state.button}
                 roles={this.state.roles}

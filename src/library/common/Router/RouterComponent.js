@@ -1,11 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-/* import GuardedRoute from '../GuardRoute/GuardRoute' */
+import GuardedRoute from '../GuardRoute/GuardRoute'
 import SignInComponent from '../../../modules/SignIn/SignInComponent'
 import DashboardComponent from '../../../modules/Dashboard/DashboardComponent';
 import UserComponent from '../../../modules/Users/UserComponent';
 import ProductComponent from '../../../modules/Products/ProductComponent';
 import ExchangeComponent from '../../../modules/ExchangeRates/ExchangeComponent';
+import NotFoundComponent from '../../../modules/NotFound/NotFoundComponent';
 
 class RouterComponent extends React.Component {  
   render(){
@@ -13,15 +14,20 @@ class RouterComponent extends React.Component {
       <Router>
         <Switch>
           <Route exact path='/' component={SignInComponent}/>
-          <Route exact path='/dash/:path?'>
+          <Route exact path='/notfound' component={NotFoundComponent}/>
+          <GuardedRoute path='/dash/:path?' auth=''>
             <DashboardComponent>
               <Switch>
                 <Route exact path='/dash' component={ExchangeComponent}/>
                 <Route exact path='/dash/user' component={UserComponent}/>
                 <Route exact path='/dash/product' component={ProductComponent}/>
+                <Route exact path='/dash/exchange' component={ExchangeComponent}/>
+                <Route path='*'>
+                  <Redirect to='/notfound' />
+                </Route>
               </Switch>
             </DashboardComponent>
-          </Route> : 
+          </GuardedRoute> : 
           <Redirect to='/' />
           {/* <GuardedRoute path='/dashboard' component={DashboardComponent} auth=''/> */}
         </Switch>
