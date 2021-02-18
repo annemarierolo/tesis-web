@@ -6,7 +6,7 @@ import UserService from '../../main/services/User/UserService'
 import TableResponsiveComponent from '../../library/common/TableResponsive/TableResponsiveComponent';
 import RolesService from '../../main/services/Roles/RolesService';
 import Alerts from '../../library/common/Alerts/Alert';
-import Remove from '@material-ui/icons/Remove';
+import Delete from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
 
 class UserComponent extends React.Component {
@@ -26,7 +26,7 @@ class UserComponent extends React.Component {
           onClick: (event, rowData) =>  this.showForm('Editar', rowData)
         },
         { 
-          icon: Remove,
+          icon: Delete,
           tooltip: 'Eliminar',
           onClick: (event, rowData) => this.deleteUser(rowData)
         }
