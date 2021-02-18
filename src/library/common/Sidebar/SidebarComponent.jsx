@@ -10,8 +10,7 @@ import routes from './SidebarItems'
 const SidebarComponent = (props) => {
     const [path, setPath] = useState(window.location.pathname);
     return (
-        
-        <div>
+        <div className={styles.sidenav}>
             <div className={`${styles.brand}`}>
                 <div className={styles.content}>
                     <div className={styles.item}>

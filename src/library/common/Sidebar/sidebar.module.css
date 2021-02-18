@@ -1,3 +1,14 @@
+.sidenav {
+    height: 100%;
+    width: 240px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    border-right: 0.5px solid lightgray;
+}
+
 /* Header Styles */
 .brand {
     height: 15vh;
@@ -127,6 +138,18 @@
 }
 
 @media (max-width: 1400px), (max-height: 700px) {
+    .sidenav {
+        height: 100%;
+        width: 80px;
+        min-width: 10vh;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        overflow-x: hidden;
+        border-right: 0.5px solid lightgray;
+    }
+
     .text {
       display: none;
     }
