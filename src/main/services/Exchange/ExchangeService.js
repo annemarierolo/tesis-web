@@ -48,6 +48,24 @@ const ExchangeService = {
                     reject(error)
                 });
         })
+    },
+
+    async updateExchange(exchange) {
+        delete exchange['tableData']
+        return new Promise(async(resolve, reject) => {
+            const url = 'http://localhost:5000/api/v1/exchanges/' + exchange.id
+            const headers = {
+                'x-access-token': localStorage.getItem('token')
+            }
+            await axios.put(url, exchange, { headers: headers })
+                .then((res) => {
+                    resolve(res.data)
+                })
+                .catch((error) => {
+                    console.log("Errorrr", error);
+                    reject(error)
+                });
+        })
     }
 }
 
