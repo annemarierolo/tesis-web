@@ -40,6 +40,25 @@ const CategoryService = {
         })
     },
 
+    async updateCategory(category) {
+        delete category['tableData']
+        delete category['category']
+        return new Promise(async(resolve, reject) => {
+            const url = 'http://localhost:5000/api/v1/categories/' + category.id
+            const headers = {
+                'x-access-token': localStorage.getItem('token')
+            }
+            await axios.put(url, category, { headers: headers })
+                .then((res) => {
+                    resolve(res.data)
+                })
+                .catch((error) => {
+                    console.log("Errorrr", error);
+                    reject(error)
+                });
+        })
+    },
+
     async fetchSubCategory() {
         return new Promise(async (resolve, reject) => {
             const url = 'http://localhost:5000/api/v1/subcategories'
