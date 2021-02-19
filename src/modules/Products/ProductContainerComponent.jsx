@@ -27,7 +27,6 @@ class ProductComponent extends React.Component {
             indicatorColor="primary"
             textColor="primary"
             centered
-            fullWidth
           >
             <Tab label="Categoria | Subcategoria" value={0}/>
             <Tab label="Productos" value={1}/>
