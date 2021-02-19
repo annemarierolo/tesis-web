@@ -4,7 +4,7 @@ import GuardedRoute from '../GuardRoute/GuardRoute'
 import SignInComponent from '../../../modules/SignIn/SignInComponent'
 import DashboardComponent from '../../../modules/Dashboard/DashboardComponent';
 import UserComponent from '../../../modules/Users/UserComponent';
-import ProductComponent from '../../../modules/Products/ProductComponent';
+import ProductComponent from '../../../modules/Products/ProductContainerComponent';
 import ExchangeComponent from '../../../modules/ExchangeRates/ExchangeComponent';
 import NotFoundComponent from '../../../modules/NotFound/NotFoundComponent';
 
