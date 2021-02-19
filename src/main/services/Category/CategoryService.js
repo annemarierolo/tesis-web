@@ -76,6 +76,25 @@ const CategoryService = {
                     reject(error)
                 });
         })
+    },
+
+    async addSubCategory(subcategory) {
+        return new Promise(async (resolve, reject) => {
+            const url = 'http://localhost:5000/api/v1/subcategories'
+            const headers = {
+                'x-access-token': localStorage.getItem('token')
+            }
+            await axios.post(url, subcategory, {
+                    headers: headers
+                })
+                .then((res) => {
+                    resolve(res.data)
+                })
+                .catch((error) => {
+                    console.log("Errorrr", error);
+                    reject(error)
+                });
+        })
     }
 }
 
