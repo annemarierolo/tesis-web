@@ -13,6 +13,7 @@ class ExchangeComponent extends React.Component {
     super();
     this.state = {
       headers: [
+        { title: 'Id', field: 'id', defaultSort: 'desc', hidden: true },
         { title: "Fecha", field: "date" },
         { title: "Precio", field: "amount" }
       ],
