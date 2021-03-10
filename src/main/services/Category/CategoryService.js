@@ -95,7 +95,26 @@ const CategoryService = {
                     reject(error)
                 });
         })
-    }
+    },
+
+    async updateSubCategory(subcategory) {
+        delete subcategory['tableData']
+        delete subcategory['category']
+        return new Promise(async(resolve, reject) => {
+            const url = 'http://localhost:5000/api/v1/subcategories/' + subcategory.id
+            const headers = {
+                'x-access-token': localStorage.getItem('token')
+            }
+            await axios.put(url, subcategory, { headers: headers })
+                .then((res) => {
+                    resolve(res.data)
+                })
+                .catch((error) => {
+                    console.log("Errorrr", error);
+                    reject(error)
+                });
+        })
+    },
 }
 
 export default CategoryService;
