@@ -39,7 +39,8 @@ const TableResponsiveComponent = (props) => {
         icons={tableIcons}
         columns={props.headers}
         data={props.data} 
-        actions={props.actions}     
+        actions={props.actions} 
+        parentChildData={(props.group) ? (row, rows) => rows.find(a => a.id === row[props.group]) : null}    
         options={{
           sorting: true
         }}
