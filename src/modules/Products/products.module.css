@@ -1,0 +1,212 @@
+.page {
+    width: 90%;
+    padding-bottom: 50px;
+    position: relative;
+    display: inline-block;
+}
+
+.products {
+    width: 100%;
+    background: #fff;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+}
+
+.nav {
+    width: 100%;
+}
+
+.search {
+    display: unset !important;
+    vertical-align: unset !important;
+}
+
+.label_input {
+    display: none !important;
+    text-indent: 60px;
+    font-size: 18px;
+}
+
+.filter {
+    width: 6%;
+    transition: all 1s ease;
+}
+
+.filter:before {
+    border: 0 !important;
+}
+
+.button {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 0;
+    text-align: left;
+    width: 40%;
+}
+
+.input {
+    display: inline-block;
+    position: absolute;
+    right: 20px;
+    text-align: right;
+    width: 60%;
+}
+
+.boxes {
+    width: 100%;
+    margin-top: 60px;
+}
+
+.pagination {
+    width: 100%;
+}
+
+.MuiPaper-elevation8 {
+    box-shadow: 0px 0 0px 0px rgb(0 0 0 / 0%), 0px 0px 0px 0px rgb(0 0 0 / 0%), 0px 2px 5px 0px rgb(0 0 0 / 3%) !important;
+}
+
+/*Product Form*/
+
+.form {
+    text-align: left;
+    width: 500px;
+    z-index: 2;
+    position: fixed;
+    top: 0px;
+    height: 100%;
+    right: -1000px;
+    background: #fff;
+    color: #000;
+    transition: all 1s ease;
+    border-left: 1px solid lightgrey;
+}
+
+.header {
+    border-bottom: 1px solid lightgrey;
+    display: flex;
+    padding: 15px;
+}
+
+.title {
+    font-size: 20px;
+    text-indent: 20px;
+    text-transform: capitalize;
+}
+
+.content {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    overflow-y: scroll;
+    height: 85%;
+}
+
+/* Upload Sales & Product */
+
+.upload_sale {
+    text-align: left;
+    width: 500px;
+    z-index: 2;
+    position: fixed;
+    top: -30%;
+    right: 25%;
+    height: 30%;
+    background: #fff;
+    color: #000;
+    transition: all 1s ease;
+    border: 1px solid lightgrey;
+}
+
+.upload_header {
+    border-bottom: 1px solid lightgrey;
+    display: flex;
+    padding: 15px;
+}
+
+.upload_title {
+    font-size: 20px;
+    text-indent: 20px;
+    text-transform: capitalize;
+    width: 97%;
+}
+
+.upload_content {
+    margin-top: 30px;
+}
+
+.upload_input {
+    width: 100%;
+    color: black;
+    background-color: transparent;
+    font-weight: 500;
+}
+
+.upload_input::-webkit-file-upload-button {
+    width: 30%;
+    display: inline-block;
+    background: #DDD;
+    border: 1px dashed #BBB !important;
+    padding: 7px 15px;
+    font-weight: 700;
+    border-radius: 3px;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 10pt;
+  }
+
+.upload_buttons {
+    width: 90%;
+    text-align: right;
+}
+
+.upload_button {
+    height: 40px;
+}
+
+/* View Product Card */
+
+.view {
+    text-align: left;
+    width: 75%;
+    z-index: 2;
+    position: fixed;
+    top: 100%;
+    height: 500px;
+    background: #fff;
+    color: #000;
+    transition: all 1s ease;
+    border: 1px solid lightgrey;
+}
+
+.view_header {
+    border-bottom: 1px solid lightgrey;
+    display: flex;
+    padding: 15px;
+}
+
+.view_title {
+    font-size: 25px;
+    text-indent: 20px;
+    text-transform: capitalize;
+    width: 97%;
+}
+
+.view_content {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    overflow-y: scroll;
+    height: 85%;
+}
+
+.view_text {
+    font-size: 18px;
+    text-indent: 20px;
+    margin-top: 0;
+}
+
+.chip {
+    margin: 2px;
+}
