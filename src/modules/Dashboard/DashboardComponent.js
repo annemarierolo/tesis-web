@@ -27,13 +27,15 @@ class DashboardComponent extends React.Component {
               <div className={styles.box}>
                 <div className={styles.content}>
                   <div className={styles.header}>
+                  { (this.state.user) ?
                     <div className={styles.profile}>
                       <img alt='' className={styles.icon} src={profile}/>
                       <div className={styles.info}>
                         <label className={`${styles.text} ${styles['text-name']}`}>{this.state.user.firstName} {this.state.user.lastName}</label>
-                        <label className={styles.text}>{this.state.user.role}</label>
+                        <label className={styles.text}>{this.state.user.role}</label> 
                       </div>
-                    </div>
+                    </div> :
+                  null }
                   </div>
                   <div className={styles.views}>
                     { this.props.children }
