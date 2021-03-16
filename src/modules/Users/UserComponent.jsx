@@ -6,8 +6,7 @@ import UserService from '../../main/services/User/UserService'
 import TableResponsiveComponent from '../../library/common/TableResponsive/TableResponsiveComponent';
 import RolesService from '../../main/services/Roles/RolesService';
 import Alerts from '../../library/common/Alerts/Alert';
-import Delete from '@material-ui/icons/Delete';
-import Edit from '@material-ui/icons/Edit';
+import { Delete, Edit, Clear } from '@material-ui/icons';
 
 class UserComponent extends React.Component {
 
@@ -23,7 +22,7 @@ class UserComponent extends React.Component {
         {
           icon: Edit,
           tooltip: 'Editar',
-          onClick: (event, rowData) =>  this.showForm('Editar', rowData)
+          onClick: (event, rowData) =>  this.showSlide('editar', rowData)
         },
         { 
           icon: Delete,
@@ -33,9 +32,9 @@ class UserComponent extends React.Component {
       ], 
       roles: [],
       users: [],
-      user: null,
+      user: {firstName:'', middleName:'', lastName:'', secondLastName:'', identificationNumber: '', email:'', password:'', phoneNumber:'', role_id: ''},
       form: false,
-      button: 'Agregar'
+      button: 'agregar'
     };
   }
 
@@ -46,19 +45,19 @@ class UserComponent extends React.Component {
 
   fetchUsers = async () => {
     this.setState({ users: await UserService.fetchData() })
-    await console.log(this.state.users.length > 0);
+    /* await console.log(this.state.users.length > 0); */
   }
   
   fetchRoles = async () => {
     this.setState({ roles: await RolesService.fetchData() })
-    await console.log(this.state.roles.length > 0);
+    /* await console.log(this.state.roles.length > 0); */
   }
 
   addUser = async () => {
     let user = await UserService.addUser(this.state.user)
     if (user) {
       await this.fetchUsers()
-      await this.showForm('Agregar')
+      await this.close()
     };
     
   }
@@ -67,19 +66,33 @@ class UserComponent extends React.Component {
     let user = await UserService.updateUser(this.state.user)
     if (user) {
       await this.fetchUsers()
-      await this.showForm('Agregar')
+      await this.close()
     };
     
   }
 
   deleteUser = async (user) => Alerts.desitionAlert('Desea eliminarlo', user, UserService.deleteUser, this.fetchUsers);
 
-  showForm = (label, newUser=null) => {
-    console.log(label);
+  showSlide = (label, newUser = null) => {
+    var slide = document.querySelector('.user_form__2fYng');
+    var tables = document.querySelector('.user_tables__1vwmV');
+    slide.style.right = '0px';
+    tables.style.opacity = '0.5';
+    this.assignForm(label, newUser);
+  }
+
+  close = () => {
+    var slide = document.querySelector('.user_form__2fYng');
+    var tables = document.querySelector('.user_tables__1vwmV');
+    slide.style.right = '-1000px';
+    tables.style.opacity = '1';
+  }
+
+  assignForm = (label, newUser=null) => {
     this.setState((prevState) => {
         let form = !prevState.form;
         let button = label;
-        let user = newUser ? newUser : {firstName:'', middleName:'', lastName:'', secondLastName:'', email:'', password:'', phoneNumber:'', rol:1};
+        let user = newUser ? newUser : {firstName:'', middleName:'', lastName:'', secondLastName:'', identificationNumber: '', email:'', password:'', phoneNumber:'', role_id: ''};
         return { form, button, user };
     })
   }
@@ -160,31 +173,40 @@ class UserComponent extends React.Component {
   render = () => {
     return (
         <div>
-            {/* <h1>Users Component!</h1> */}
-            <div className={styles.table}>
-              { !this.state.form ? 
-              <TableResponsiveComponent title='Usuarios' headers={this.state.headers} actions={this.state.actions} data={this.state.users} showForm={this.showForm} deleteItem={this.deleteUser}/> 
-              : <UserFormComponent 
-                label={this.state.button}
-                roles={this.state.roles}
-                user={this.state.user}
-                hideForm={this.showForm}
-                handleFirstName={this.handleFirstName}
-                handleMiddleName={this.handleMiddleName}
-                handleLastName={this.handleLastName}
-                handleSecondLastName={this.handleSecondLastName}
-                handleIdentificationNumber={this.handleIdentificationNumber}
-                handleEmail={this.handleEmail}
-                handlePassword={this.handlePassword}
-                handlePhoneNumber={this.handlePhoneNumber}
-                handleRol={this.handleRol}
-                addUser={this.addUser}
-                updateUser={this.updateUser}
-                /> }
+          <div className={styles.container}>
+            <div className={styles.tables}>
+              <div className={styles.table}>
+                <TableResponsiveComponent title='Usuarios' headers={this.state.headers} actions={this.state.actions} data={this.state.users} deleteItem={this.deleteUser}/> 
+              </div>
+            </div>
+            <div className={styles.form}>
+              <div className={styles.header}>
+                  <Clear onClick={this.close}/>
+                  <span className={styles.title}> {this.state.button} Usuario </span>
+              </div>
+              <div className={styles.content}>
+                <UserFormComponent 
+                  label={this.state.button}
+                  roles={this.state.roles}
+                  user={this.state.user}
+                  handleFirstName={this.handleFirstName}
+                  handleMiddleName={this.handleMiddleName}
+                  handleLastName={this.handleLastName}
+                  handleSecondLastName={this.handleSecondLastName}
+                  handleIdentificationNumber={this.handleIdentificationNumber}
+                  handleEmail={this.handleEmail}
+                  handlePassword={this.handlePassword}
+                  handlePhoneNumber={this.handlePhoneNumber}
+                  handleRol={this.handleRol}
+                  addUser={this.addUser}
+                  updateUser={this.updateUser}
+                  />
+              </div>
             </div>
             <div className={styles.button}>
-              { !this.state.form ? <Button variant="contained" color={ !this.state.form ? `primary` : `secondary` } className={styles.button} onClick={()=>this.showForm('Agregar')}>+</Button> : undefined }
+              <Button variant="contained" color='primary' className={styles.button} onClick={()=>this.showSlide('agregar')}>+</Button>
             </div>
+          </div>
         </div>
     );
   }
