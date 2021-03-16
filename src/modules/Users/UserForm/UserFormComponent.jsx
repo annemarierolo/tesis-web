@@ -11,7 +11,8 @@ const UserFormComponent = (props) => {
     console.log(props);
     return (
         <div className={styles.card}>
-            <h1>{props.label} Usuario</h1>
+            {/* <h1>{props.label} Usuario</h1> */}
+            <p>Ingresa la información necesaria para {props.label} un usuario:</p>
             <div className='inputs'>
                 <TextField className={styles.input} id="outlined-basic" label="Primer Nombre" variant="outlined"
                     value={props.user.firstName} onChange={(event) => props.handleFirstName(event.target.value)}/>
@@ -48,8 +49,8 @@ const UserFormComponent = (props) => {
                     </Select>
                 </FormControl>
             </div>
-            <Button variant="contained" color='secondary' className={styles.button} onClick={props.hideForm}>Cancelar</Button>
-            <Button variant="contained" color='primary' className={styles.button} onClick={() => props.label === 'Agregar' ? props.addUser(props.user) : props.updateUser(props.user)}>{ props.label }</Button>
+            {/* <Button variant="contained" color='secondary' className={styles.button} onClick={props.hideForm}>Cancelar</Button> */}
+            <Button variant="contained" color='primary' className={styles.button} onClick={() => props.label === 'agregar' ? props.addUser(props.user) : props.updateUser(props.user)}>{ props.label }</Button>
         </div>
     );
 
