@@ -2,3 +2,25 @@
     width: 70% !important;
     height: 80% !important;
 }
+
+.reponsive {
+    display: inline-block;
+}
+
+.page {
+    width: 50%;
+    height: 400px;
+    display: inline-block;
+}
+
+.title {
+    font-family: 'Dosis', sans-serif;
+}
+
+@media (max-width: 950px), (max-height: 700px){
+    .page {
+        width: 100%;
+        display: block;
+        margin-bottom: 100px;
+    }
+}
