@@ -5,7 +5,7 @@ import styles from './productform.module.css'
 
 
 const ProductFormComponent = (props) => {
-    console.log(props);
+    /* console.log(props); */
     return (
         <div className={styles.card}>
             <p>Ingresa la información necesaria para {props.label} un producto:</p>
