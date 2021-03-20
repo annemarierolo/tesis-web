@@ -8,7 +8,7 @@ import styles from './userform.module.css'
 
 
 const UserFormComponent = (props) => {
-    console.log(props);
+    /* console.log(props); */
     return (
         <div className={styles.card}>
             {/* <h1>{props.label} Usuario</h1> */}
