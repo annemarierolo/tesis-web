@@ -70,7 +70,7 @@ export default class PieGraph extends PureComponent {
 
     render() {
         return (
-            <div className={styles.page}>
+            <div className={styles.page_pie}>
                 <h2 className={styles.title}>{this.state.label}</h2>
                 <ResponsiveContainer width="99%" height="99%">
                     <PieChart width={400} height={400}>

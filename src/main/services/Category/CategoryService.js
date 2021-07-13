@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Alerts from '../../../library/common/Alerts/Alert.jsx'
 
 const CategoryService = {
 
@@ -15,8 +16,8 @@ const CategoryService = {
                     resolve(res.data)
                 })
                 .catch((error) => {
-                    console.log("Errorrr", error);
-                    reject(error)
+                    if (error.response.status === 401) Alerts.renewTokenAlert()
+                    else reject(error)
                 });
         })
     },
@@ -34,8 +35,8 @@ const CategoryService = {
                     resolve(res.data)
                 })
                 .catch((error) => {
-                    console.log("Errorrr", error);
-                    reject(error)
+                    if (error.response.status === 401) Alerts.renewTokenAlert()
+                    else reject(error)
                 });
         })
     },
@@ -53,8 +54,8 @@ const CategoryService = {
                     resolve(res.data)
                 })
                 .catch((error) => {
-                    console.log("Errorrr", error);
-                    reject(error)
+                    if (error.response.status === 401) Alerts.renewTokenAlert()
+                    else reject(error)
                 });
         })
     },
@@ -72,8 +73,8 @@ const CategoryService = {
                     resolve(res.data)
                 })
                 .catch((error) => {
-                    console.log("Errorrr", error);
-                    reject(error)
+                    if (error.response.status === 401) Alerts.renewTokenAlert()
+                    else reject(error)
                 });
         })
     },
@@ -91,8 +92,8 @@ const CategoryService = {
                     resolve(res.data)
                 })
                 .catch((error) => {
-                    console.log("Errorrr", error);
-                    reject(error)
+                    if (error.response.status === 401) Alerts.renewTokenAlert()
+                    else reject(error)
                 });
         })
     },
@@ -110,8 +111,8 @@ const CategoryService = {
                     resolve(res.data)
                 })
                 .catch((error) => {
-                    console.log("Errorrr", error);
-                    reject(error)
+                    if (error.response.status === 401) Alerts.renewTokenAlert()
+                    else reject(error)
                 });
         })
     },

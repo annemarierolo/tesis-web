@@ -7,6 +7,7 @@ import UserComponent from '../../../modules/Users/UserComponent';
 import ProductContainerComponent from '../../../modules/ProductsContainer/ProductContainerComponent';
 import ExchangeComponent from '../../../modules/ExchangeRates/ExchangeComponent';
 import NotFoundComponent from '../../../modules/NotFound/NotFoundComponent';
+import ReportsComponent from '../../../modules/Reports/ReportsComponent';
 
 class RouterComponent extends React.Component {  
   render(){
@@ -18,10 +19,11 @@ class RouterComponent extends React.Component {
           <GuardedRoute path='/dash/:path?' auth=''>
             <DashboardComponent>
               <Switch>
-                <GuardedRoute exact path='/dash' component={ExchangeComponent}/>
-                <GuardedRoute exact path='/dash/user' component={UserComponent}/>
-                <GuardedRoute exact path='/dash/product' component={ProductContainerComponent}/>
-                <GuardedRoute exact path='/dash/exchange' component={ExchangeComponent}/>
+                {/* <GuardedRoute exact path='/dash' component={ProductContainerComponent} roles={["Gerente General", "Gerente de Logística"]}/> */}
+                <GuardedRoute exact path='/dash/user' component={UserComponent} roles={["Gerente General"]}/>
+                <GuardedRoute exact path='/dash/product' component={ProductContainerComponent} roles={["Gerente General", "Gerente de Logística"]}/>
+                <GuardedRoute exact path='/dash/exchange' component={ExchangeComponent} roles={["Gerente General"]}/>
+                <GuardedRoute exact path='/dash/report' component={ReportsComponent} roles={["Gerente General"]}/>
                 <Route path='*'>
                   <Redirect to='/notfound' />
                 </Route>

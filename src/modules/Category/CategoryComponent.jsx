@@ -1,10 +1,11 @@
 import React from 'react';
 import styles from './category.module.css';
 import { Add, Edit, Clear } from '@material-ui/icons'
-import TableResponsiveComponent from '../../library/common/TableResponsive/TableResponsiveComponent'
-import CategoryService from '../../main/services/Category/CategoryService';
+import Alerts from '../../library/common/Alerts/Alert';
 import CategoryFormComponent from './CategoryForm/CategoryFormComponent';
+import CategoryService from '../../main/services/Category/CategoryService';
 import SubCategoryFormComponent from './SubCategoryForm/SubCategoryFormComponent';
+import TableResponsiveComponent from '../../library/common/TableResponsive/TableResponsiveComponent'
 
 class CategoryComponent extends React.Component {
 
@@ -53,7 +54,8 @@ class CategoryComponent extends React.Component {
             formCategory: false,
             formSubCategory: false,
             buttonCategory: 'agregar',
-            buttonSubCategory: 'agregar'
+            buttonSubCategory: 'agregar',
+            tables: true
         }
     }
 
@@ -62,11 +64,13 @@ class CategoryComponent extends React.Component {
         this.fetchSubCategories();
     }
 
-    fetchCategories = async () => this.setState({ categories: await CategoryService.fetchCategory() })
+    fetchCategories = async () => this.setState({ categories: await CategoryService.fetchCategory().catch(() => Alerts.alertBar('Error Obteniendo Información', 'error')), tables: true })
 
     addCategory = async () => {
         let category = await CategoryService.addCategory(this.state.category)
+        .catch(() => Alerts.alertBar('Error Agregando Categoria', 'error'))
         if (category) {
+            Alerts.alertBar('Categoria Agregada Exitosamente', 'success')
             await this.fetchCategories()
             await this.close();
         };
@@ -74,18 +78,23 @@ class CategoryComponent extends React.Component {
 
     updateCategory = async () => {
         let category = await CategoryService.updateCategory(this.state.category)
+        .catch(() => Alerts.alertBar('Error Modificando Categoria', 'error'))
         if (category) {
+            this.setState({tables: false})
+            Alerts.alertBar('Categoria Modificada Exitosamente', 'success')
             await this.fetchCategories()
             await this.fetchSubCategories()
             await this.close();
         };
     }
 
-    fetchSubCategories = async () => this.setState({ subcategories: await CategoryService.fetchSubCategory() })
+    fetchSubCategories = async () => this.setState({ subcategories: await CategoryService.fetchSubCategory().catch(() => Alerts.alertBar('Error Obteniendo Información', 'error')), tables: true })
 
     addSubCategory = async () => {
         let subcategory = await CategoryService.addSubCategory(this.state.subcategory)
+        .catch(() => Alerts.alertBar('Error Agregando SubCategoria', 'error'))
         if (subcategory) {
+            Alerts.alertBar('SubCategoria Agregada Exitosamente', 'success')
             await this.fetchSubCategories()
             await this.close();
         };
@@ -93,7 +102,10 @@ class CategoryComponent extends React.Component {
 
     updateSubCategory = async () => {
         let subcategory = await CategoryService.updateSubCategory(this.state.subcategory)
+        .catch(() => Alerts.alertBar('Error Modificando SubCategoria', 'error'))
         if (subcategory) {
+            this.setState({tables: false})
+            Alerts.alertBar('SubCategoria Modificada Exitosamente', 'success')
             await this.fetchSubCategories()
             await this.close();
         };
@@ -101,9 +113,11 @@ class CategoryComponent extends React.Component {
 
     showSlide = (label, form, new_category = null, new_subcategory = null) => {
         var slide = document.querySelector('.category_form__3rj7L');
-        var tables = document.querySelector('.category_tables__3lEDr');
+        /* var tables = document.querySelector('.category_tables__3lEDr'); */
+        var blocked = document.querySelector('.category_blocked__1cH5N');
         slide.style.right = '0px';
-        tables.style.opacity = '0.5';
+        /* tables.style.opacity = '0.5'; */
+        blocked.style.display = 'block';
         this.assignForm(label,form, new_category, new_subcategory);
     }
 
@@ -121,8 +135,10 @@ class CategoryComponent extends React.Component {
     close = () => {
         var slide = document.querySelector('.category_form__3rj7L');
         var tables = document.querySelector('.category_tables__3lEDr');
+        var blocked = document.querySelector('.category_blocked__1cH5N');
         slide.style.right = '-1000px';
         tables.style.opacity = '1';
+        blocked.style.display = 'none';
         this.setState((prevState) => { let slide = !prevState.slide; let formCategory = false; let formSubCategory = false; return { slide, formCategory, formSubCategory }; })
     }
 
@@ -153,12 +169,13 @@ class CategoryComponent extends React.Component {
     render = () => {
         return (
             <div className={styles.container}>
+                <div className={styles.blocked}></div>
                 <div className={styles.tables}>
                     <div className={styles.table}>
-                            <TableResponsiveComponent title='Categorias' headers={this.state.headersCategory} actions={this.state.actionsCategory} data={this.state.categories} />
+                        { (this.state.tables) && <TableResponsiveComponent title='Categorias' headers={this.state.headersCategory} actions={this.state.actionsCategory} data={this.state.categories} /> }
                     </div>
                     <div className={styles.table}>
-                            <TableResponsiveComponent title='Subcategorias' headers={this.state.headersSubCategory} actions={this.state.actionsSubCategory} data={this.state.subcategories} />
+                        { (this.state.tables) && <TableResponsiveComponent title='Subcategorias' headers={this.state.headersSubCategory} actions={this.state.actionsSubCategory} data={this.state.subcategories} />}
                     </div>
                 </div>
 

@@ -48,7 +48,7 @@ export default class BubbleGraph extends PureComponent {
         const range = [16, 225];
 
         return (
-            <div className={styles.page}>
+            <div className={styles.page_year_2}>
                 <h1 className={styles.title}>{this.state.label}</h1>
                 { this.state.data.map((item, index) => (
                 <ResponsiveContainer key={index} width="99%" height={99}>

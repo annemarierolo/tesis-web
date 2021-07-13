@@ -1,0 +1,32 @@
+.input {
+    width: 30%;
+    margin-right: 20px !important;
+}
+
+.inputs {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.list_content {
+    width: fit-content;
+    justify-content: center;
+}
+
+.list {
+    text-align: left;
+    margin-bottom: 10px;
+    list-style: none;
+}
+
+.listB li::before {
+    content: '•';
+    color: #8884d8;
+    font-size: 25px;
+}
+
+.listW li::before {
+    content: '•';
+    color: #82ca9d;
+    font-size: 25px;
+}

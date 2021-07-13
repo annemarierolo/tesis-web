@@ -1,15 +1,20 @@
 import React from 'react';
 import styles from './products.module.css';
-import {Skeleton, Rating} from '@material-ui/lab';
+import {Skeleton, Rating, Alert} from '@material-ui/lab';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Alerts from '../../library/common/Alerts/Alert';
 import BarCode from '../../library/common/BarCode/BarCode';
 import notFound from '../../resources/images/image-not-found.png';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import ProductFormComponent from './ProductForm/ProductFormComponent';
 import ProductService from '../../main/services/Product/ProductService';
+import ExchangeService from '../../main/services/Exchange/ExchangeService';
 import CategoryService from '../../main/services/Category/CategoryService';
 import { Clear, Search, AcUnit, Receipt, LocalOffer, LocalMall } from '@material-ui/icons';
 import {Grid, Box, Typography, FormControl, IconButton, Input, InputLabel, InputAdornment, Button, TablePagination, Menu, MenuItem, Chip, CircularProgress} from '@material-ui/core';
+
+import { connect } from 'react-redux';
+import * as productActions from '../../library/redux/actions/productActions'
 
 class ProductComponent extends React.Component {
 
@@ -26,46 +31,78 @@ class ProductComponent extends React.Component {
             page: 0,
             pages: 0,
             rowsPerPage: 8,
-            product: { code:'', codebar:'', name: '', price: '', freeze: false, tax: false, recipe: false, regulated: false, rating: 0, replacementClassification: '', labProviderName: '', subcategory_id: '' },
+            product: { code:'', codebar:'', name: '', price: '', freeze: false, tax: false, recipe: false, regulated: false, rating: 0, replacement_classification: '', lab_provider_name: '', subcategory_id: '' },
             subcategories: [],
             menu: null,
-            button: 'agregar'
+            button: 'agregar',
+            exchange: { amount: 1 }
         }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        this.lastExchange();
         this.fetchSubCategories();
-        this.fetchProducts();
+        this.getActiveParameter();
+        this.getProducts();
+    }
+
+    getProducts = async () => {
+        let cont = 0;
+        while (this.state.data.length === 0) {
+            const { allProducts } = this.props;
+            if (cont >= 8) {
+                await this.props.fetchProducts();
+                cont = -1
+            }
+            await this.fetchProducts(allProducts);
+            await this.sleep(5000)
+            cont += 1
+        }
+    }
+
+    sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     initialConfig = () => {
         let copy = this.state.data;
-        let actualview = this.state.data.slice(this.state.page*this.state.rowsPerPage, (this.state.page*this.state.rowsPerPage) + this.state.rowsPerPage)
-        let pages = this.state.data.length;
-        this.setState({copy, actualview, pages, loading: false })
+        let actualview = (this.state.data !== undefined) ? this.state.data.slice(this.state.page*this.state.rowsPerPage, (this.state.page*this.state.rowsPerPage) + this.state.rowsPerPage) : null;
+        let pages = (this.state.data !== undefined) ?  this.state.data.length : null;
+        this.setState({copy, actualview, pages, filter: '', loading: (this.state.data.length === 0) ? true : false })
     }
 
-    fetchProducts = async () => {
-        await this.setState({ data: await ProductService.fetchProduct() })
+    fetchProducts = async (allProducts) => {
+        await this.setState({ data: allProducts})
         await this.initialConfig();
+    }
+
+    lastExchange = async () => {
+        this.setState( { exchange: await ExchangeService.lastExchange() })
     }
 
     fetchSubCategories = async () => this.setState({ subcategories: await CategoryService.fetchSubCategory() })
 
     addProduct = async () => {
         let data = { product: this.state.product, user: { user_id: 1 }}
-        let product = await ProductService.addProduct(data)
-        if (product) {
-            await this.fetchProducts()
+        let products = await this.props.addProduct(data, this.state.data)
+        .catch(() => Alerts.alertBar('Error Agregando Producto', 'error'))
+        /* let product = await ProductService.addProduct(data)
+        .catch(() => Alerts.alertBar('Error Agregando Producto', 'error')) */
+        if (products) {
+            Alerts.alertBar('Producto Agregado Exitosamente', 'success')
+            await this.fetchProducts(products)
             await this.close();
         };
     }
 
     updateProduct = async () => {
-        let product = await ProductService.updateProduct(this.state.product)
-        if (product) {
-            await this.fetchProducts()
+        let products = await this.props.editProduct(this.state.product, this.state.data)
+        .catch(() => Alerts.alertBar('Error Modificando Producto', 'error'))
+        if (products) {
+            Alerts.alertBar('Producto Modificado Exitosamente', 'success');
+            await this.fetchProducts(products);
             await this.close();
+            await this.handleLeaveFilter();
         };
     }
 
@@ -74,12 +111,31 @@ class ProductComponent extends React.Component {
         var formData = await new FormData();
         await formData.append("file", csvFile.files[0]);
         await this.setState({ loadingCSV: true });
-        let response = await ProductService.uploadCSV(formData).catch(error => {
-            console.log('error ', error);
-        })
-        await console.log(response)
-        await this.setState({ loadingCSV: false });
+        let response = await ProductService.uploadCSV(formData)
+        if (response.code === 200) {
+            Alerts.alertBar('Archivo Cargado Exitosamente', 'success');
+            await this.setState({ data: [], loading: true } );
+            await this.setState({ loadingCSV: false });
+            await this.closeCSV();
+            await this.props.fetchProducts();
+            await this.getProducts();
+        } else { 
+            Alerts.alertBar('Error Cargando Archivo', 'error');
+            await this.setState({ loadingCSV: false });
+            await this.closeCSV();
+        }
     }
+
+    deleteProduct = async () => { 
+        this.setState(() => { return { menu: null }; });
+        await Alerts.desitionMultipleAlert('Desea eliminarlo', this.state.product, this.state.data, this.props.deleteProduct, this.fetchProducts, 'Producto')
+    }
+
+    getActiveParameter = async () => {
+        let parameter = true;
+        await ExchangeService.getParameter().then(res => parameter = res)
+        this.setState({activeParameter: parameter})
+      }
 
     handleChange = (event, value) => {
         this.setState({ value });
@@ -144,54 +200,68 @@ class ProductComponent extends React.Component {
 
     showSlide = (label, new_product = null) => {
         var slide = document.querySelector('.products_form__NyT-O');
-        var products = document.querySelector('.products_products__1eM3g');
+        /* var products = document.querySelector('.products_products__1eM3g'); */
+        var blocked = document.querySelector('.products_blocked__2PftM');
         slide.style.right = '0px';
-        products.style.opacity = '0.5';
+        /* products.style.opacity = '0.5'; */
+        blocked.style.display = 'block';
         this.assignForm(label, new_product);
     }
 
     close = () => {
         var slide = document.querySelector('.products_form__NyT-O');
         var products = document.querySelector('.products_products__1eM3g');
+        var blocked = document.querySelector('.products_blocked__2PftM');
         slide.style.right = '-1000px';
         products.style.opacity = '1';
+        blocked.style.display = 'none';
     }
 
     assignForm = (label, newProduct=null) => {
         this.setState((prevState) => {
             let button = label;
-            let product = newProduct ? this.state.product : { code:'', codebar:'', name: '', price: '', freeze: false, tax: false, recipe: false, regulated: false, rating:0, replacementClassification: '', labProviderName: '', subcategory_id: '' };
+            let product = newProduct ? this.state.product : { code:'', codebar:'', name: '', price: '', freeze: false, tax: false, recipe: false, regulated: false, rating:0, replacement_classification: '', lab_provider_name: '', subcategory_id: '' };
             return { button, product, menu: null };
         })
     }
 
     slideCSV = () => {
         var slide = document.querySelector('.products_upload_sale__3iQjU');
-        var products = document.querySelector('.products_products__1eM3g');
+        /* var products = document.querySelector('.products_products__1eM3g'); */
+        var blocked = document.querySelector('.products_blocked__2PftM');
         slide.style.top = '30%';
-        products.style.opacity = '0.5';
+        /* products.style.opacity = '0.5'; */
+        blocked.style.display = 'block';
     }
 
     closeCSV = () => {
         var slide = document.querySelector('.products_upload_sale__3iQjU');
         var products = document.querySelector('.products_products__1eM3g');
-        slide.style.top = '-30%';
+        var blocked = document.querySelector('.products_blocked__2PftM');
+        slide.style.top = '-35%';
         products.style.opacity = '1';
+        blocked.style.display = 'none';
     }
 
     viewSlide = () => {
         var slide = document.querySelector('.products_view__2a2KS');
-        var products = document.querySelector('.products_products__1eM3g');
-        slide.style.top = '20%';
-        products.style.opacity = '0.5';
+        /* var products = document.querySelector('.products_products__1eM3g'); */
+        var blocked = document.querySelector('.products_blocked__2PftM');
+        slide.classList.add('products_activate__1myV7');
+        /* slide.style.top = '20%'; */
+        /* products.style.opacity = '0.5'; */
+        blocked.style.display = 'block';
         this.setState((prevState) => { return { menu: null }; })
     }
 
     viewClose = () => {
         var slide = document.querySelector('.products_view__2a2KS');
         var products = document.querySelector('.products_products__1eM3g');
-        slide.style.top = '100%';
+        var blocked = document.querySelector('.products_blocked__2PftM');
+        slide.classList.remove('products_activate__1myV7');
+        /* slide.style.top = '100%'; */
         products.style.opacity = '1';
+        blocked.style.display = 'none';
     }
 
     handleCode = (code) => {
@@ -274,15 +344,15 @@ class ProductComponent extends React.Component {
     handleClasification = (clasification) => {
         this.setState((prevState) => {
             let product = Object.assign({}, prevState.product);
-            product.replacementClassification = Number(clasification);
+            product.replacement_classification = clasification;
             return { product };
         })
     }
 
-    handleLabProviderName = (name) => {
+    handlelab_provider_name = (name) => {
         this.setState((prevState) => {
             let product = Object.assign({}, prevState.product);
-            product.labProviderName = name;
+            product.lab_provider_name = name;
             return { product };
         })
     }
@@ -296,15 +366,35 @@ class ProductComponent extends React.Component {
         })
     }
 
+    roundToTwo(num) {    
+        var amount = +(Math.round(num + 'e+2') + "e-2");
+        var amountString = String(amount);
+        var amountStringFinal = (amountString.includes('.')) ? amountString : amountString + '.00' 
+        amountStringFinal = amountStringFinal.replace(/\d(?=(\d{3})+\.)/g, '$&,')
+        return amountStringFinal;
+    }
+
+    amount = (dolar) => { 
+        var res = this.roundToTwo(dolar)
+        return res 
+    }
+
+    bolivaresAmount = (dolar, bs) => { 
+        var res = this.roundToTwo(Number(dolar) * bs)
+        return res
+    }
+
     render = () => {
         return (
             <div className={styles.page}>
+                <div className={styles.blocked}></div>
                 <div className={styles.products}>
-                    { (!this.state.loading) ? <div className={styles.nav}>
+                    { ((!this.state.loading /* || (this.state.data !== undefined) */)) ? <div className={styles.nav}>
+                        { (this.state.activeParameter) ? <Alert className={styles.alert} severity="warning">Concluyó el plazo del parámetro. Debe incluir un tipo de cambio!</Alert> : null }
                         <div className={styles.button}>
                             <Button variant="contained" color="primary" className={styles.add} onClick={() => this.showSlide('agregar')}>Agregar</Button>
                             &nbsp;&nbsp;
-                            <Button variant="contained" color="primary" className={styles.add} onClick={() => this.slideCSV()}>Subir CSV</Button>
+                            <Button variant="contained" color="primary" className={styles.add} onClick={() => this.slideCSV()}>Subir Archivo</Button>
                         </div>
                         <div className={styles.input}>
                             <FormControl className={styles.search}>
@@ -332,8 +422,8 @@ class ProductComponent extends React.Component {
                     </div> : null}
                     
                     <Grid container justify='space-evenly' className={styles.boxes}>
-                    {(this.state.loading ? Array.from(new Array(12)) : this.state.actualview).map((item, index) => (
-                        <Box key={index} width={260} marginRight={1} my={0.5}>
+                    {(((this.state.loading /* || (this.state.data === undefined) */)) ? Array.from(new Array(12)) : this.state.actualview).map((item, index) => (
+                        <Box key={index} width={260} marginRight={1} my={1}>
                         {item ? (
                             <img style={{ width: 260, height: 145 }} alt={item.name} src={notFound} />
                         ) : (
@@ -342,17 +432,17 @@ class ProductComponent extends React.Component {
 
                         {item ? (
                             <Box pr={2}>
-                                <Typography gutterBottom variant="body1" >
+                                <Typography gutterBottom variant="body1" className={styles.capitalize}>
                                     {/* {index} {item.title} */}
                                     {item.name}
                                 </Typography>
                                 <Typography display="block" variant="body2" color="textSecondary">
                                     {/* {item.channel} */}
-                                    Precio: $ {item.price}
+                                    Precio: $ { this.roundToTwo(item.price) }
                                 </Typography>
                                 <Typography variant="body2" color="textSecondary">
                                     {/* {`${item.views} • ${item.createdAt}`} */}
-                                    <Rating name="read-only" value={item.rating} readOnly />
+                                    <Rating name="read-only" value={Number(item.rating)} readOnly />
                                     <IconButton aria-label="more" aria-controls="menu" aria-haspopup="true" onClick={(event) => this.handleOpenMenu(event, item)}>
                                         <MoreVertIcon />
                                     </IconButton>
@@ -362,7 +452,7 @@ class ProductComponent extends React.Component {
                                         }}>
                                         <MenuItem onClick={() => this.viewSlide()}>Ver</MenuItem>
                                         <MenuItem onClick={() => this.showSlide('editar', 1)}>Editar</MenuItem>
-                                        <MenuItem>Eliminar</MenuItem>
+                                        <MenuItem onClick={() => this.deleteProduct()}>Eliminar</MenuItem>
                                     </Menu>
                                 </Typography>
                             </Box>
@@ -402,7 +492,7 @@ class ProductComponent extends React.Component {
                             handleName={this.handleName} handlePrice={this.handlePrice}
                             handleFreeze={this.handleFreeze} handleTax={this.handleTax}
                             handleRecipe={this.handleRecipe} handleRegulated={this.handleRegulated} handleRating={this.handleRating}
-                            handleClasification={this.handleClasification} handleLabProviderName={this.handleLabProviderName}
+                            handleClasification={this.handleClasification} handlelab_provider_name={this.handlelab_provider_name}
                             handleSubcategoryId={this.handleSubcategoryId}
                         />
                     </div>
@@ -410,16 +500,16 @@ class ProductComponent extends React.Component {
 
                 <div className={styles.upload_sale}>
                     <div className={styles.upload_header}>
-                        <span className={styles.upload_title}>Subir Archivo CSV (Productos/Ventas)</span>
+                        <span className={styles.upload_title}>Subir Archivo EXCEL/CSV (Productos/Ventas)</span>
                         <Clear onClick={this.closeCSV}/>
                     </div>
                     <div className={styles.upload_content}>
                         { (!this.state.loadingCSV) ? 
                         <div>
-                            <p style={{width: '90%', marginLeft: '5%'}}>Subir archivo .csv para agregar las ventas de un mes, así como los productos que no se encuentren registrados actualmente.</p>
-                            <input id='upload' className={styles.upload_input} type="file" accept=".csv"/>
+                            <p style={{width: '90%', marginLeft: '5%'}}>Subir archivo EXCEL o CSV para agregar las ventas de un mes, así como los productos que no se encuentren registrados actualmente.</p>
+                            <input id='upload' className={styles.upload_input} type="file" accept=".csv, .xlsx, .xls"/>
                             <div className={styles.upload_buttons}>
-                                <Button variant="contained" color='secondary' className={styles.upload_button} onClick={this.uploadCSV}>upload</Button>
+                                <Button variant="contained" color='secondary' className={styles.upload_button} onClick={this.uploadCSV}>Subir</Button>
                             </div>
                         </div> :
                         <CircularProgress color="secondary" /> }
@@ -434,14 +524,14 @@ class ProductComponent extends React.Component {
                     <div className={styles.view_content}>
                         <Grid container justify="flex-start">
                             <Box style={{ width: '100%' }} marginLeft={4} my={0}>
-                                <div style={{ display: 'flex' }} >
+                                <div className={styles.view_info} >
                                     <img style={{ width: 300, height: 175 }} alt={this.state.product.name} src={notFound} />
                                     <span> 
-                                        <div className={styles.view_text}>Nombre: {this.state.product.name}</div>
-                                        <div className={styles.view_text}>Nombre del Laboratorio/Proveedor: {this.state.product.labProviderName}</div>
-                                        <div className={styles.view_text}>Precio $: {this.state.product.price}</div>
-                                        <div className={styles.view_text}>Precio Bs: {this.state.product.price}</div>
-                                        <div className={styles.view_text}><Rating name="read-only" value={this.state.product.rating} readOnly /></div>
+                                        <div className={styles.view_text}><strong>Nombre:</strong> {this.state.product.name}</div>
+                                        <div className={styles.view_text}><strong>Nombre del Laboratorio/Proveedor:</strong> {this.state.product.lab_provider_name}</div>
+                                        <div className={styles.view_text}><strong>Precio $:</strong> { this.amount(this.state.product.price) }</div>
+                                        <div className={styles.view_text}><strong>Precio Bs:</strong> { this.bolivaresAmount(this.state.product.price, this.state.exchange?.amount) }</div>
+                                        <div className={styles.view_text}><Rating name="read-only" value={Number(this.state.product.rating)} readOnly /></div>
                                     </span>
                                 </div>
                                 <div>
@@ -449,7 +539,7 @@ class ProductComponent extends React.Component {
                                     <Chip className={styles.chip} color="primary" label={(this.state.product.regulated===1)?'Regulado':'No Regulado'} icon={<LocalMall />} />
                                     <Chip className={styles.chip} color="primary" label={(this.state.product.tax===1)?'Libre de Impuestos':'No es Libre de Impuestos'} icon={<MonetizationOnIcon />} />
                                     <Chip className={styles.chip} color="primary" label={(this.state.product.recipe===1)?'Con Recipe':'Sin Recipe'} icon={<Receipt />} />
-                                    <Chip className={styles.chip} color="primary" label={(this.state.product.replacementClassification===1) ? 'Clasificación A' : (this.state.product.replacementClassification===2) ? 'Clasificación B' : 'Clasificación C'} icon={<LocalOffer />} />
+                                    <Chip className={styles.chip} color="primary" label={(this.state.product.replacement_classification==='A') ? 'Clasificación A' : (this.state.product.replacement_classification==='B') ? 'Clasificación B' : 'Clasificación C'} icon={<LocalOffer />} />
                                 </div>
 
                                 <BarCode value={this.state.product.codebar} />
@@ -483,4 +573,8 @@ class ProductComponent extends React.Component {
 
 }
 
-export default ProductComponent;
+const mapStateToProps = state => {
+    return state.productReducers;
+};
+
+export default connect(mapStateToProps, productActions)(ProductComponent);

@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './signinform.module.css';
+import { Alert } from '@material-ui/lab';
 
 const SignInFormComponent = (props) => {
+    const [emailValidation, setEmailValidation] = useState(true);
+
     return(
         <div className={styles.card}>
             <div className={styles.content}>
@@ -11,15 +14,24 @@ const SignInFormComponent = (props) => {
                     <div className={styles['input-container']}>
                         <div className={styles.title}>
                             <label className={styles['input-label']}>
-                                Correo Electronico
+                                Correo Electrónico
                             </label>
                         </div>
-                        <input 
+                        <input
+                            className={styles.email}
                             type='email'
-                            placeholder='Correo Electronico'
-                            onChange={(event) => props.handleEmail(event.target.value) }
+                            placeholder='Correo Electrónico'
+                            onChange={(event) => {
+                                props.handleEmail(event.target.value) 
+                                var emailInput = document.querySelector('.signinform_email__3xcCE');
+                                var re = /\S+@\S+\.\S+/;
+                                setEmailValidation(re.test(event.target.value));
+                                if (!(re.test(event.target.value))) emailInput.classList.add('signinform_error__3pcVa')
+                                else emailInput.classList.remove('signinform_error__3pcVa')
+                            }}
                             value={props.user.email}
                         />
+                        { (!emailValidation) && <p className={styles.errormsg} >Correo Invalido</p> }
                     </div>
                     <div className={styles['input-container']}>
                         <div className={styles.title}>
@@ -43,6 +55,9 @@ const SignInFormComponent = (props) => {
                             Iniciar Sesión
                         </button>
                     </div>
+
+                    { (props.error) ? <Alert className={styles.alert} severity="error">{props.errorMsg}</Alert> : null }
+
                 </div>
             </div>
         </div>

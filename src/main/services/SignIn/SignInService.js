@@ -3,6 +3,7 @@ import axios from 'axios'
 const SignInService = { 
 
     async SignIn(user) {
+        user['device'] = 'web'
         return new Promise(async (resolve, reject) => {
             const url = 'http://localhost:5000/api/v1/login'
             const headers = {
@@ -13,7 +14,7 @@ const SignInService = {
                 resolve(res.data)
             })
             .catch((error) => {
-                console.log("Errorrr", error);
+                console.log(error.response);
                 reject(error)
             });
         })

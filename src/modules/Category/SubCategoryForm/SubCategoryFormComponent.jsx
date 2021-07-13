@@ -16,14 +16,15 @@ const SubCategoryFormComponent = (props) => {
             <p>Ingresa la información necesaria para {props.label} la subcategoria:</p>
             <div className='inputs'>
                 <TextField className={styles.input} id="outlined-basic" label="Nombre" variant="outlined"
-                    value={props.subcategory.name} onChange={(event) => props.handleSubCategoryName(event.target.value)} />
+                    value={props.subcategory.name} 
+                    onChange={(event) => { if (event.target.value.length < 50) props.handleSubCategoryName(event.target.value)}} />
                 <FormControl variant="outlined" className={styles.input}>
                     <InputLabel htmlFor="outlined-age-native-simple">Categoria</InputLabel>
                     <Select
                         native
                         value={props.subcategory.category_id}
                         label="Categoria"
-                        onChange={(event) => props.handleCategoryId(event.target.value)}
+                        onChange={(event) =>  props.handleCategoryId(event.target.value)}
                         inputProps={{
                             name: 'category',
                             id: 'outlined-age-native-simple',
@@ -37,7 +38,7 @@ const SubCategoryFormComponent = (props) => {
                 </FormControl>
             </div>
             {/* <Button variant="contained" color='secondary' className={styles.button} onClick={props.hide}>Cancelar</Button> */}
-            <Button variant="contained" color='primary' className={styles.button} onClick={() => props.label === 'agregar' ? props.add(props.subcategory) : props.update(props.subcategory)}>{props.label}</Button>
+            <Button variant="contained" color='primary' disabled={ props.subcategory.name === ''  || props.subcategory.category_id === ''} className={styles.button} onClick={() => props.label === 'agregar' ? props.add(props.subcategory) : props.update(props.subcategory)}>{props.label}</Button>
         </div>
     );
 }

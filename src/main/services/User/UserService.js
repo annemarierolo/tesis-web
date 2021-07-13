@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Alerts from '../../../library/common/Alerts/Alert.jsx'
 
 const UserService = {
 
@@ -13,8 +14,9 @@ const UserService = {
                     resolve(res.data)
                 })
                 .catch((error) => {
-                    console.log("Errorrr", error);
-                    reject(error)
+                    console.log(error.response.status);
+                    if (error.response.status === 401) Alerts.renewTokenAlert()
+                    else reject(error)
                 });
         })
     },
@@ -32,8 +34,8 @@ const UserService = {
                     resolve(res.data)
                 })
                 .catch((error) => {
-                    console.log("Errorrr", error);
-                    reject(error)
+                    if (error.response.status === 401) Alerts.renewTokenAlert()
+                    else reject(error)
                 });
         })
     },
@@ -50,8 +52,8 @@ const UserService = {
                     resolve(res.data)
                 })
                 .catch((error) => {
-                    console.log("Errorrr", error);
-                    reject(error)
+                    if (error.response.status === 401) Alerts.renewTokenAlert()
+                    else reject(error)
                 });
         })
     },
@@ -66,8 +68,8 @@ const UserService = {
                     resolve(res.data)
                 })
                 .catch((error) => {
-                    console.log("Errorrr", error);
-                    reject(error)
+                    if (error.response.status === 401) Alerts.renewTokenAlert()
+                    else reject(error)
                 });
         })
     }

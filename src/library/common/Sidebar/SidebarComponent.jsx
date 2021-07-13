@@ -24,6 +24,7 @@ const SidebarComponent = (props) => {
                 <div className={styles.content}>
                     {
                         routes.map((route, i) => 
+                        (route.roles.includes(props.user?.role)) &&
                         <Link to={route.path} style={{ textDecoration: 'none' }} onClick={() => setPath(route.path)} key={i}>
                             <div className={path === route.path ? `${styles['item-active']}` : `${styles.item}` }>
                                 <img alt='' className={styles.icon} src={route.icon}/>

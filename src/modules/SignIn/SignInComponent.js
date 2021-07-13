@@ -4,6 +4,9 @@ import SignInSideComponent from './SignInSide/SignInSideComponent';
 import SignInService from '../../main/services/SignIn/SignInService'
 import styles from './signin.module.css'
 
+import { connect } from 'react-redux';
+import * as productActions from '../../library/redux/actions/productActions'
+
 class SignInComponent extends React.Component {
 
   constructor(props) {
@@ -12,8 +15,16 @@ class SignInComponent extends React.Component {
       user: {
         email: '',
         password: ''
-      }
+      },
+      error: false,
+      errorMsg: '',
+      loading: false
     };
+  }
+
+  componentDidMount = () => {
+    this.props.clearProducts();
+    localStorage.clear();
   }
 
   handleEmail = (email) => {
@@ -33,33 +44,44 @@ class SignInComponent extends React.Component {
   }
 
   signIn = async () => {
-    let user = await SignInService.SignIn(this.state.user)
+    let user = await SignInService.SignIn(this.state.user).catch((error) => {
+      console.log(error.response);
+      this.setState({ error: true, errorMsg: error.response.data.error })
+    })
     if (user) {
+      this.setState({ userError: false })
       await localStorage.setItem('token', user.token)
       await localStorage.setItem('user', JSON.stringify(user.user))
-      await this.props.history.push('/dash')
+      await this.props.history.push('/dash/product')
+      this.props.fetchProducts();
     };
     
   }
 
   render = () => {
     return (
-        <div className={styles.page}>
-            <div className={styles['side-image']}>
-              <SignInSideComponent></SignInSideComponent>
-            </div>
-            <div className={styles['side-form']}>
-              <SignInFormComponent
-                handleEmail={this.handleEmail}
-                handlePassword={this.handlePassword}
-                signIn={this.signIn}
-                user={this.state.user}
-              ></SignInFormComponent>
-            </div>
+      <div className={styles.page}>
+        <div className={styles['side-image']}>
+          <SignInSideComponent></SignInSideComponent>
         </div>
+        <div className={styles['side-form']}>
+          <SignInFormComponent
+            handleEmail={this.handleEmail}
+            handlePassword={this.handlePassword}
+            signIn={this.signIn}
+            user={this.state.user}
+            error={this.state.error}
+            errorMsg={this.state.errorMsg}
+          ></SignInFormComponent>
+        </div>
+      </div>
     );
   }
 
 }
 
-export default SignInComponent;
+const mapStateToProps = state => {
+  return state.productReducers;
+};
+
+export default connect(mapStateToProps, productActions)(SignInComponent);

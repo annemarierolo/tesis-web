@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Alerts from '../../../library/common/Alerts/Alert.jsx'
 
 const RolesService = {
 
@@ -13,8 +14,8 @@ const RolesService = {
                     resolve(res.data)
                 })
                 .catch((error) => {
-                    console.log("Errorrr", error);
-                    reject(error)
+                    if (error.response.status === 401) Alerts.renewTokenAlert()
+                    else reject(error)
                 });
         })
     }

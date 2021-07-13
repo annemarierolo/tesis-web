@@ -10,3 +10,23 @@
     flex-grow: 1;
     width: 35%;
 }
+
+@media (max-width: 1200px) {
+    .side-form  {
+      width: 45%;
+    }
+
+    .side-image {
+        width: 55%;
+    }
+}
+
+@media (max-width: 1000px), (max-height: 700px) {
+    .side-form  {
+      width: 100%;
+    }
+
+    .side-image {
+        width: 0%;
+    }
+}

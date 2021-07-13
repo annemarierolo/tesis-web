@@ -11,13 +11,13 @@ const ProductFormComponent = (props) => {
             <p>Ingresa la información necesaria para {props.label} un producto:</p>
             <div className='inputs'>
                 <TextField className={styles.input} id="outlined-basic" label="Codigo" variant="outlined"
-                    value={props.product.code} onChange={(event) => props.handleCode(event.target.value)}/>
+                    value={props.product.code} onChange={(event) => { if ((!isNaN(event.nativeEvent.data) || event.nativeEvent.data === null) && event.target.value.length <= 30) props.handleCode(event.target.value)}}/>
                 <TextField className={styles.input} id="outlined-basic" label="Codigo de Barra" variant="outlined"
-                    value={props.product.codebar} onChange={(event) => props.handleCodebar(event.target.value)}/>
+                    value={props.product.codebar} onChange={(event) => { if ((!isNaN(event.nativeEvent.data) || event.nativeEvent.data === null) && event.target.value.length <= 30) props.handleCodebar(event.target.value)}}/>
                 <TextField className={styles.input} id="outlined-basic" label="Nombre" variant="outlined"
-                    value={props.product.name} onChange={(event) => props.handleName(event.target.value)}/>
+                    value={props.product.name} onChange={(event) => { if (event.target.value.length <= 50) props.handleName(event.target.value)}}/>
                 <TextField className={styles.input} id="outlined-basic" label="Precio" variant="outlined"
-                    value={props.product.price} onChange={(event) => props.handlePrice(event.target.value)}/>
+                    value={props.product.price} onChange={(event) => { if ((!isNaN(event.nativeEvent.data) || event.nativeEvent.data === null || event.nativeEvent.data === '.') && event.target.value.length <= 15) props.handlePrice(event.target.value)}}/>
                 <FormControl component="fieldset" className={styles.input}>
                     <FormLabel component="legend">Refrigerado</FormLabel>
                     <RadioGroup row aria-label="" name="freeze" value={props.product.freeze} onChange={(event) => props.handleFreeze(event.target.value)}>
@@ -47,17 +47,17 @@ const ProductFormComponent = (props) => {
                     </RadioGroup>
                 </FormControl>
                 <Typography component="legend">Rating</Typography>
-                <Rating name='rate' value={props.product.rating} onChange={(event, value) => { props.handleRating(value); }}/>
+                <Rating name='rate' value={Number(props.product.rating)} onChange={(event, value) => { props.handleRating(value); }}/>
                 <FormControl component="fieldset" className={styles.input}>
                     <FormLabel component="legend">Clasificación ABC</FormLabel>
-                    <RadioGroup row aria-label="" name="clasification" value={props.product.replacementClassification} onChange={(event) => props.handleClasification(event.target.value)}>
-                        <FormControlLabel value={1} control={<Radio />} label="A" />
-                        <FormControlLabel value={2} control={<Radio />} label="B" />
-                        <FormControlLabel value={3} control={<Radio />} label="C" />
+                    <RadioGroup row aria-label="" name="clasification" value={props.product.replacement_classification} onChange={(event) => props.handleClasification(event.target.value)}>
+                        <FormControlLabel value={'A'} control={<Radio />} label="A" />
+                        <FormControlLabel value={'B'} control={<Radio />} label="B" />
+                        <FormControlLabel value={'C'} control={<Radio />} label="C" />
                     </RadioGroup>
                 </FormControl>
                 <TextField className={styles.input} id="outlined-basic" label="Nombre del Laboratorio | Proveedor" variant="outlined"
-                    value={props.product.labProviderName} onChange={(event) => props.handleLabProviderName(event.target.value)}/>
+                    value={props.product.lab_provider_name} onChange={(event) => { if (event.target.value.length <= 50) props.handlelab_provider_name(event.target.value)}}/>
                 {/* <FormControl variant="outlined" className={styles.input}>
                     <InputLabel htmlFor="outlined-age-native-simple">Categoria</InputLabel>
                     <Select
@@ -80,7 +80,7 @@ const ProductFormComponent = (props) => {
                     <InputLabel htmlFor="outlined-age-native-simple">Subcategoria</InputLabel>
                     <Select
                         native
-                        value={props.product.subcategory_id}
+                        value={Number(props.product.subcategory_id)}
                         label="Subcategory"
                         onChange={(event) => props.handleSubcategoryId(event.target.value)}
                         inputProps={{
@@ -95,7 +95,18 @@ const ProductFormComponent = (props) => {
                     </Select>
                 </FormControl>
             </div>
-            <Button variant="contained" color='primary' className={styles.button} onClick={() => props.label === 'agregar' ? props.add(props.product) : props.update(props.product)}>{ props.label }</Button>
+            <Button variant="contained" color='primary' className={styles.button} 
+                onClick={() => props.label === 'agregar' ? props.add(props.product) : props.update(props.product)}
+                disabled={
+                    props.product.code === '' || props.product.codebar === '' || props.product.name === '' ||
+                    props.product.price === '' || props.product.freeze === '' || props.product.tax === '' ||
+                    props.product.recipe === '' || props.product.regulated === '' || props.rating === '' ||
+                    props.product.replacement_classification === '' || props.product.lab_provider_name === '' ||
+                    props.product.subcategory_id === ''
+                }
+            >
+                { props.label }
+            </Button>
         </div>
     );
 

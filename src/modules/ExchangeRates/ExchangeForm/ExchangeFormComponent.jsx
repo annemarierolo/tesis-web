@@ -14,11 +14,11 @@ const ExchangeFormComponent = (props) => {
             <div className='inputs'>
                 <Button variant="outlined" color='primary' className={styles.input} onClick={() => props.label === 'agregar' ? props.handleDolar(props.bcv, 'add') : props.handleDolar(props.bcv, 'edit')}> Banco Central de Venezuela - Bs. {props.bcv}</Button>
                 <Button variant="outlined" color='secondary' className={styles.input} onClick={() => props.label === 'agregar' ? props.handleDolar(props.dToday, 'add') : props.handleDolar(props.dToday, 'edit')}> DolarToday - Bs. {props.dToday}</Button>
-                <TextField className={styles.input} id="outlined-basic" label="Valor Propio" variant="outlined"
-                    value={props.exchange.amount} onChange={(event) => props.handleDolar(event.target.value)}/>
+                <TextField className={styles.input} id="outlined-basic" label="Valor Propio" variant="outlined" 
+                    value={props.exchange.amount} onChange={(event) => { if ((!isNaN(event.nativeEvent.data) || event.nativeEvent.data === null || event.nativeEvent.data === '.') && event.target.value.length <= 50) props.handleDolar(event.target.value)}}/>
             </div>
             {/* <Button variant="contained" color='secondary' className={styles.button} onClick={props.hideForm}>Cancelar</Button> */}
-            <Button variant="contained" color='primary' className={styles.button} onClick={() => props.label === 'agregar' ? props.addExchange() : props.updateExchange(props.exchange)}>{ props.label }</Button>
+            <Button variant="contained" color='primary' disabled={props.exchange.amount === ''} className={styles.button} onClick={() => props.label === 'agregar' ? props.addExchange() : props.updateExchange(props.exchange)}>{ props.label }</Button>
         </div>
     );
 

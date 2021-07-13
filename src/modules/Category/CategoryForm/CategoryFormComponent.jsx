@@ -12,11 +12,11 @@ const CategoryFormComponent = (props) => {
             <p>La jerarquia es Categoria > Subcategoria > Producto.</p>
             <p>Ingresa la información necesaria para {props.label} la categoria:</p>
             <div className='inputs'>
-                <TextField className={styles.input} id="outlined-basic" label="Nombre" variant="outlined"
-                    value={props.category.name} onChange={(event) => props.handleCategoryName(event.target.value)}/>
+                <TextField className={styles.input} id="outlined-basic" label="Nombre" variant="outlined" 
+                    value={props.category.name} onChange={(event) => { if (event.target.value.length < 50) props.handleCategoryName(event.target.value)}} required/>
             </div>
             {/* <Button variant="contained" color='secondary' className={styles.button} onClick={props.hide}>Cancelar</Button> */}
-            <Button variant="contained" color='primary' className={styles.button} onClick={() => props.label === 'agregar' ? props.add(props.category) : props.update(props.category)}>{ props.label }</Button>
+            <Button variant="contained" color='primary' disabled={ props.category.name === '' } className={styles.button} onClick={() => props.label === 'agregar' ? props.add(props.category) : props.update(props.category)}>{ props.label }</Button>
         </div>
     );
 }
